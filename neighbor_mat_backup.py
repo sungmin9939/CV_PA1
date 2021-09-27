@@ -16,14 +16,12 @@ def neighborhood_mat(img):
         #os.system('cls')
         print('{0}/{1}'.format(m,shape[1]-1))
         start = time.time()
-        n_matseg_total = None
         for n in range(1,shape[0]-1):
             
             r_s = img[n-1:n+2,m-1:m+2]
             r_s = r_s.flatten()
             idx = (shape[0]-2) * (m-1) + n
             num_padding = np.count_nonzero(r_s == -1)
-            n_matseg = np.zeros([1, (shape[0]-2)*(shape[1]-2)])
             
             sum = np.sum(r_s) + num_padding - r_s[4]
             avg = sum / (8-num_padding)
@@ -37,8 +35,7 @@ def neighborhood_mat(img):
                     var += (r_s[i] - avg)**2
             var = (var/(8-num_padding))
 
-            
-            
+            n_matseg = np.zeros([1, (shape[0]-2)*(shape[1]-2)])
 
             for i in range(len(r_s)):
                 if r_s[i] == -1 or i==4:
@@ -52,16 +49,12 @@ def neighborhood_mat(img):
                     index = idx+(shape[0]-2)*(rest-1) + (share-1)
                     
                     n_matseg[0][index] = weight_r_s
-            if n_matseg_total is None:
-                n_matseg_total = sparse.coo_matrix(n_matseg.transpose())
+            if result_mat is None:
+                result_mat = sparse.coo_matrix(n_matseg.transpose())
             else:
+                print(n)
                 coo_n_matseg = sparse.coo_matrix(n_matseg.transpose())
-                n_matseg_total = sparse.hstack((n_matseg_total, coo_n_matseg))
-        if result_mat is None:
-            result_mat = n_matseg_total
-        else:
-            n_matseg_total = sparse.coo_matrix(n_matseg_total)
-            result_mat = sparse.hstack((result_mat, n_matseg_total))
+                result_mat = sparse.hstack((result_mat,coo_n_matseg))
         end = time.time()
         print('time: {}'.format(end-start))
     t_end = time.time()

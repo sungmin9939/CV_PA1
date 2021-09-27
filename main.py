@@ -86,10 +86,15 @@ def neighborhood_mat(img):
 
 '''
 def main():
+    
     g_img = cv2.imread('./datasets/Emily-In-Paris-gray.png',cv2.IMREAD_GRAYSCALE,)
     n_mat = neighborhood_mat(g_img)
     print(n_mat.shape)
     sparse.save_npz('neighborhood_matrix.npz',n_mat)
+    
+    
+
+
     
     
     

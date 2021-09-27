@@ -53,15 +53,16 @@ def neighborhood_mat(img):
                     
                     n_matseg[0][index] = weight_r_s
             if n_matseg_total is None:
-                n_matseg_total = sparse.coo_matrix(n_matseg.transpose())
+                n_matseg_total = n_matseg.transpose()
             else:
-                coo_n_matseg = sparse.coo_matrix(n_matseg.transpose())
-                n_matseg_total = sparse.hstack((n_matseg_total, coo_n_matseg))
+                
+                #coo_n_matseg = sparse.coo_matrix(n_matseg.transpose())
+                n_matseg_total = np.append(n_matseg_total,n_matseg.transpose(),axis=1)
         if result_mat is None:
             result_mat = n_matseg_total
         else:
             n_matseg_total = sparse.coo_matrix(n_matseg_total)
-            result_mat = sparse.hstack((result_mat, n_matseg_total))
+            result_mat = sparse.hstack(result_mat, n_matseg_total)
         end = time.time()
         print('time: {}'.format(end-start))
     t_end = time.time()
