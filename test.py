@@ -1,8 +1,30 @@
 import numpy as np
+from numpy.lib.npyio import load
+from scipy import sparse
+import math
+'''
+a = np.array([[0,0,0,0,0,0,1,0]])
 
-a = np.ones((1,3,3))
-a[0][1][1] = 3
+b = np.array([[0,0,0,0,0,0,0,1]])
+d = np.array([[1],[2]])
+
+
+ac = sparse.coo_matrix(a)
+bc = sparse.coo_matrix(b)
+mat = ac.dot(bc.transpose())
+print(mat.toarray())
+
+
+a_csr = sparse.csr_matrix(a)
+
+
+cc = sparse.vstack((ac,bc))
+#print(cc.toarray())
+'''
+
+a = np.array([[1,2,3],[4,5,6],[7,8,9]],dtype=np.int16)
+a = sparse.coo_matrix(a)
 print(a)
-b = np.ones((1,3,3))
-print(a.flatten()[4])
-print(a)
+sparse.save_npz('my.npz',a)
+loaded = sparse.load_npz('my.npz')
+print('\n{}'.format(loaded))

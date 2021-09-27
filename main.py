@@ -1,7 +1,10 @@
+from scipy import sparse
+from neighbor_mat import neighborhood_mat
 import numpy as np
 import cv2
 import sys,os
 
+'''
 def neighborhood_mat(img):
     img = img.astype(np.int16)
     img = np.pad(img, (1,1),constant_values=-1)
@@ -54,7 +57,7 @@ def neighborhood_mat(img):
            
 
 
-        '''
+        
         ##corners
         if i==0 and j==0:
             pass
@@ -78,13 +81,15 @@ def neighborhood_mat(img):
         ##commons
         else:
             pass
-        '''
+        
     return result_mat
 
-
+'''
 def main():
     g_img = cv2.imread('./datasets/Emily-In-Paris-gray.png',cv2.IMREAD_GRAYSCALE,)
     n_mat = neighborhood_mat(g_img)
+    print(n_mat.shape)
+    sparse.save_npz('neighborhood_matrix.npz',n_mat)
     
     
     
