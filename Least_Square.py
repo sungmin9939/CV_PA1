@@ -3,48 +3,59 @@ import numpy as np
 import cv2, time,sys
 import scipy.sparse.linalg as linalg
 
-def least_square():
-    neighbor = sparse.load_npz('neighborhood_matrix_opt1.npz')
+def least_square(weight, is_multi):
+    multi = 'multi' if is_multi else 'normal'
+    neighbor = sparse.load_npz('./n_mat/neighborhood_matrix_{}_{}.npz'.format(weight,multi))
     neighbor = neighbor.transpose()
     Id = sparse.identity(neighbor.shape[0])
     Id = sparse.coo_matrix(Id - neighbor)
 
-    scribble = cv2.imread('./datasets/Emily-In-Paris-scribbles.png')
+    if is_multi:
+        scribble = cv2.imread('./datasets/Emily-In-Paris-scribbles-plus.png')
+    else:
+        scribble = cv2.imread('./datasets/Emily-In-Paris-scribbles.png')
     
     scribble = scribble[:,:,2]
 
     shape = scribble.shape
-    l1 = np.zeros(shape[0]*shape[1])
-    l2 = np.zeros(shape[0]*shape[1])
+    labels = np.zeros([8, shape[0]*shape[1]])
+
+    
 
     scribble = scribble.transpose().flatten()
-    for i in range(len(scribble)):
-        pixel = scribble[i]
-        if pixel == 0:
-            continue
-        if pixel == 1:
-            l1[i] = 1
-        elif pixel == 2:
-            l2[i] = 1
+    
+    if is_multi:
+
+        for i in range(len(scribble)):
+            pixel = scribble[i]
+            if pixel == 0:
+                continue
+            labels[pixel][i] = 1
+    else:
+        for i in range(len(scribble)):
+            pixel = scribble[i]
+            if pixel == 0:
+                continue
+            else:
+                labels[pixel-1][i] = 1
+
+   
 
    
  
     print('calculation start...')
     start = time.time()
 
+    for i in range(8):
+        if i>1 and not is_multi:
+            continue
+        if i==0 and is_multi:
+            continue
+        expected_label = linalg.lsqr(Id, labels[i,:])
+        np.save('./expected_label/expected_label{}_{}_{}'.format(i, weight,multi),expected_label[0])
+        print('{}th label finished. time:{}'.format(i, time.time()-start))
+        time.sleep(60)
     
-    expected_label1 = linalg.lsqr(Id,l1)
-    np.save('./expected_label1',expected_label1[0])
-
-    print(expected_label1[0])
-    print('time: {}'.format(time.time() - start))
     
-
-    expected_label2 = linalg.lsqr(Id,l2)
-    
-    np.save('./expected_label2',expected_label2[0])
-    print('------------------------------------')
-    print(expected_label2[0])
-    print('time: {}'.format(time.time() - start))
     
     

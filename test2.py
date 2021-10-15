@@ -1,14 +1,9 @@
+import cv2
 import numpy as np
-import cv2,math
+from matplotlib import pyplot as plt
 from PIL import Image
-import scipy.sparse as sparse
 
-a = 0
-b = 0
+img = cv2.imread('./datasets/Emily-In-Paris-scribbles-plus.png')
 
-if a == b == 0:
-    print('1')
-elif a == b == 1:
-    print('2')
-else:
-    print('3')
+img = img[:,:,2]
+print(np.count_nonzero(img==0))
