@@ -8,7 +8,9 @@ from eval import IoU
 
 
 def post_processing(weight, is_multi, show=False):
-    print('post processing start\nweight:{} is_multi:{}'.format(weight,is_multi))
+    print('='*30)
+    print('post processing start....')
+    print('[weight:{},  is_multi:{}]'.format(weight,is_multi))
     multi = 'multi' if is_multi else 'normal'
     if is_multi:
         scribble = cv2.imread('./datasets/Emily-In-Paris-scribbles-plus.png')
@@ -67,4 +69,5 @@ def post_processing(weight, is_multi, show=False):
     np.save('./output/final_label_{}_{}'.format(weight,multi),final_label)
 
     IoU(weight=weight,is_multi=is_multi,show=show)
-
+    print('='*30)
+    print('\n')

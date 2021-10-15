@@ -8,7 +8,7 @@ from scipy.sparse import linalg
 
 
 def IoU(weight, is_multi, show=False):
-    print('IoU calculation start\nweight:{} is_multi:{}'.format(weight,is_multi))
+    
     multi = 'multi' if is_multi else 'normal'
     final_label = np.load('./output/final_label_{}_{}.npy'.format(weight,multi))
     if is_multi:
@@ -39,8 +39,12 @@ def IoU(weight, is_multi, show=False):
                 elif l == i or gl == i:
                     union[i] += 1
         iou = inter/union
-        print(iou)
-        print(np.sum(iou[1:])/(len(iou)-1))
+        print(iou[1:])
+        iou = np.sum(iou[1:])/(len(iou)-1)
+        print(
+            'IoU of {} labels using {} method is {}%'.format(multi, weight, round(iou*100,2))
+            )
+        print()
     else:
         union = 0
         inter = 0
@@ -55,7 +59,8 @@ def IoU(weight, is_multi, show=False):
                 inter += 1
             else:
                 union += 1
-        print(inter/union)
+        print('IoU of {} labels using {} method is {}%'.format(multi, weight, round((inter/union)*100,2)))
+        
 
     #image showing of multi label is not implemented
     if show:
@@ -70,24 +75,4 @@ def IoU(weight, is_multi, show=False):
         img.save('./results/result_{}_{}.png'.format(weight,multi),'PNG')
         img.show()
 
-    '''
-    union = 0
-    inter = 0
-
-    for i in range(len(final_label)):
-        l_hat = final_label[i]
-        gt_l = gt[i]
-
-        if l_hat == gt_l == 0:
-            continue
-        elif l_hat == gt_l == 1:
-            union += 1
-            inter += 1
-        else:
-            union += 1
-    print('IoU: {}'.format(inter/union * 100))
-
-
     
-    '''
-

@@ -11,7 +11,7 @@ def neighborhood_mat(img, weight=None, is_multi=False):
     t_start = time.time()
     ##preprocess according to weight functions...
     if weight == 'Laplacian':
-        mask = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+        mask = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]]) #8-direction Laplacian
         img = cv2.filter2D(img,-1,mask)
     if weight == 'ML_Laplacian' or weight == 'MLsum':
         mask1 = np.array([[1,-2,1]])
