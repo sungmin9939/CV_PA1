@@ -35,7 +35,9 @@ for i in range(result.shape[0]):
             result_img[i][j] = 255 if result[i][j] else 0
 
 print("graph cut IoU: {}".format(inter/union))
-result_img = result_img.astype(np.int16)
+
+result_img = result_img.astype(np.uint8)
 result_img = Image.fromarray(result_img)
 result_img.save('./results/result_graphcut_normal.png','PNG')
+
 result_img.show()
